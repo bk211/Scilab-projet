@@ -60,9 +60,18 @@ function [Ub] = bruite(U, s)
     Ub = Ub * s + U;
 endfunction
 
+function [Uimp] = bruite_imp(U, p)
+// Description of bruite(U, s)
+I = rand(U);
+//disp(I);
+Uimp = 255*rand(U).*(I <p/100) + (I>=p/100).*U;
+
+endfunction
+    
 
 //z=im_contour(img, 0.2);
 //imshow(z/255);
 
-y = bruite(img, 50);
-imshow(y/255);
+y = bruite_imp(img, 10)/255;
+
+imshow(y);
