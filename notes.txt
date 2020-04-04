@@ -1,0 +1,3 @@
+en scilab, index 1 a X
+matrice de taille M x N >>> M hauteur x N largeur
+dont y avant x;
