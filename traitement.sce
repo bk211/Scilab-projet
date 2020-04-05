@@ -140,7 +140,7 @@ function [M] = im_median(U,f)
 end
 endfunction
 
-function I = extension_lineaire(U)
+function [I] = extension_lineaire(U)
 // Description of extension_lineaire(U)
 LUT = zeros(256, size(U,3));
 for k = 1 : size(U,3)
@@ -160,8 +160,32 @@ for i = 1: size(U,1)
 end
 end
 
-
 endfunction
+
+
+function R = seuillage(U, seuil)
+// Description of seuillage
+[sizeY, sizeX, sizeZ] = size(U);
+
+R = zeros(U);
+for k = 1:sizeZ
+    for i = 1:sizeY
+        for j = 1:sizeX
+            if( U(i,j,k) > seuil) then
+                R(i,j,k) = 255;
+            else
+                R(i,j,k) = 0;
+            end
+        end
+    end
+end
+endfunction
+
+
+
+
+
+
 
 //z=im_contour(img, 0.2);
 //imshow(z/255);
@@ -169,5 +193,6 @@ endfunction
 //y = bruite_imp(img, 30)/255;
 //imshow(y);
 
-k = extension_lineaire(img);
+//k = extension_lineaire(img);
+k = seuillage(img, 100);
 imshow(k/255);
