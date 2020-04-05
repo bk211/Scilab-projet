@@ -1,6 +1,7 @@
 funcprot(0);
 
 img = double(imread('img\lena.png'));
+co = imread("img\4.2.04.tiff");
 
 test = [ 10, 20, 30; 40,50,60];
 
@@ -39,25 +40,22 @@ endfunction
 
 function [M] = im_contour(img, cst)
     [sizeX, sizeY, sizeZ] = size(img);
-
     M = zeros(sizeY, sizeX,sizeY);
 
 for k = 1 :sizeZ
     for i = 1 :sizeY
         for j = 1:sizeX
             //disp(i,j);
-            M(i,j, k) = norme_gradient(img, i, j, sizeX, sizeY, sizeZ, cst);
+            M(i,j, k) = norme_gradient(img, i, j, sizeX, sizeY, k, cst);
         end
     end
 end
-
-
-
 endfunction
+
 
 function [Ub] = bruite(U, s)
 // Description of bruite(U, s)
-    Ub = rand(size(U,1), size(U,2),sizeZ(U,3), 'normal');
+    Ub = rand(size(U,1), size(U,2),size(U,3), 'normal');
     Ub = Ub * s + U;
 endfunction
 
@@ -108,7 +106,7 @@ end
 //mprintf("%d %d %d %d", ydebutExtra, yfinExtra, xdebutExtra, xfinExtra);
 
 
-A = U(ydebut: yfin, xdebut: xfin, sizeZ, dim);
+A = U(ydebut: yfin, xdebut: xfin, dim);
 
 endfunction
 
@@ -144,18 +142,20 @@ endfunction
 
 function I = extension_lineaire(U)
 // Description of extension_lineaire(U)
-LUT = zeros(1,256, size(U,3));
+LUT = zeros(256, size(U,3));
 for k = 1 : size(U,3)
 for ng = 1:256
-    LUT(1,ng, k) = 255 * (ng - min(U)) / (max(U(:,:,k)) - min(U(:,:,k)));
+    LUT(ng, k) = 255 * (ng - min(U(:,:,k))) / (max(U(:,:,k)) - min(U(:,:,k)));
+    //mprintf("ng = %d , lut(ng) = %d\n", ng, 255 * (ng - min(U(:,:,k))) / (max(U(:,:,k)) - min(U(:,:,k))));
 end
 end
+
 
 I = zeros(U);
 for k = 1: size(U,3);
 for i = 1: size(U,1)
     for j = 1:size(U,2)
-        I(i,j,k) = LUT(1 ,U(i,j,k) - 1, k);
+        I(i,j,k) = LUT(U(i,j,k), k);
     end
 end
 end
@@ -169,4 +169,5 @@ endfunction
 //y = bruite_imp(img, 30)/255;
 //imshow(y);
 
-//k = extension_lineaire(img);
+k = extension_lineaire(img);
+imshow(k/255);
