@@ -156,6 +156,7 @@ endfunction
 function Pbutton_histogramme_callback(handles)
 //Write your callback for  Pbutton_histogramme  here
 P = histogramme(double(handles.S));
+clf();
 if(size(P,3)) == 3 then
     plot(P(:,:,1),'ro-');
     plot(P(:,:,2),'cya+');

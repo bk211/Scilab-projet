@@ -163,7 +163,7 @@ end
 endfunction
 
 
-function R = seuillage(U, seuil)
+function [R] = seuillage(U, seuil)
 // Description of seuillage
 [sizeY, sizeX, sizeZ] = size(U);
 
@@ -182,7 +182,7 @@ end
 endfunction
 
 
-function R = changement_echelle(U, Sx, Sy)
+function [R] = changement_echelle(U, Sx, Sy)
 // Description of changement_echelle
 H = Sy * size(U,1);
 W = Sx * size(U,2);
@@ -200,7 +200,7 @@ end
 
 endfunction
 
-function R = histogramme(U)
+function [R] = histogramme(U)
 // Description of histogramme
 R = zeros(1,256, size(U,3));
 
@@ -213,15 +213,3 @@ for k = 1: size(U,3)
 end
 
 endfunction
-
-
-
-//z=im_contour(img, 0.2);
-//imshow(z/255);
-
-//y = bruite_imp(img, 30)/255;
-//imshow(y);
-
-//k = extension_lineaire(img);
-//k = seuillage(img, 100);
-//imshow(k/255);
