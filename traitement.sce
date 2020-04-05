@@ -38,8 +38,7 @@ endfunction
 
 
 function [M] = im_contour(img, cst)
-    sizeX = size(img,1);
-    sizeY = size(img,2);
+    [sizeX, sizeY] = size(img);
 
     M = zeros(sizeY, sizeX);
 
@@ -65,13 +64,84 @@ function [Uimp] = bruite_imp(U, p)
 I = rand(U);
 //disp(I);
 Uimp = 255*rand(U).*(I <p/100) + (I>=p/100).*U;
+endfunction
+
+function [A] = im_extract(U,i,j,f)
+// Description of im_extract(U,i,j,f)
+[sizeY, sizeX] = size(img);
+
+if i - f < 1 then
+    ydebut = 1;
+    ydebutExtra = (i - f);
+else
+    ydebut = i - f;
+    ydebutExtra = 0;
+end
+if i + f > sizeY then
+    yfin = sizeY;
+    yfinExtra = (i + f);
+else
+    yfin = i +f;
+    yfinExtra = 0
+end
+
+if j - f < 1 then
+    xdebut = 1
+    xdebutExtra = (i - f);
+else
+    xdebut = j - f;
+    xdebutExtra = 0;
+end
+
+if j + f > sizeX then
+    xfin = sizeX;
+    xfinExtra = (i +f );
+else
+    xfin = j + f;
+    xfinExtra = 0;
+end
+
+//mprintf("%d %d %d %d \n", ydebut,yfin, xdebut, xfin);
+//mprintf("%d %d %d %d", ydebutExtra, yfinExtra, xdebutExtra, xfinExtra);
+
+
+A = U(ydebut: yfin, xdebut: xfin);
 
 endfunction
+
+
+function [M] = im_moyenne(U,f)
+// Description of im_moyenne(U, f)
+nb = (2*f +1)^2;
+[sizeY, sizeX] = size(U);
+M = zeros(U);
+for i = 1:sizeY
+    for j = 1:sizeX
+        M(i,j) = sum(im_extract(U, i, j , f))/nb;
+    end
+end
+endfunction
+
+function [M] = im_median(U,f)
+    // Description of im_median(U, f)
+    nb = (2*f +1)^2;
+    [sizeY, sizeX] = size(U);
+    M = zeros(U);
+    for i = 1:sizeY
+        for j = 1:sizeX
+            M(i,j) = median(im_extract(U, i, j , f));
+        end
+    end
+    endfunction
     
+
+
 
 //z=im_contour(img, 0.2);
 //imshow(z/255);
 
 y = bruite_imp(img, 10)/255;
+//imshow(y);
 
-imshow(y);
+res = im_moyenne(y,2);
+
