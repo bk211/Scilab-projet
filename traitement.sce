@@ -182,7 +182,23 @@ end
 endfunction
 
 
+function R = changement_echelle(U, Sx, Sy)
+// Description of changement_echelle
+H = Sy * size(U,1);
+W = Sx * size(U,2);
 
+R = zeros(H,W,size(U,3));
+for k = 1:size(U,3);
+    for i = 1:H
+        for j = 1:W
+            R(i,j,k) = U(ceil(i/Sy), ceil(j/Sx), k);
+        end
+    
+    end
+end
+
+
+endfunction
 
 
 
