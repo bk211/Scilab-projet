@@ -17,19 +17,11 @@ handles.Pbutton_im_median=uicontrol(f,'unit','normalized','BackgroundColor',[-1,
 
 f.visible = "on";
 
+exec traitement.sce;
 
 //////////
 // Callbacks are defined as below. Please do not delete the comments as it will be used in coming version
 //////////
-
-
-function action_on(img)
-
-    for 1: size(img,3)
-
-
-endfunction
-
 
 
 function ImageLoad_callback(handles)
@@ -38,6 +30,7 @@ fn = uigetfile('*');
 S  = imread(fn);
 
 imshow(S);
+
 
 //Save image to pass to another function
 handles.S = S;
@@ -50,8 +43,8 @@ endfunction
 function Pbutton_reset_callback(handles)
 //Write your callback for  Pbutton_reset  here    
 S  = imread(handles.fn);
-
 imshow(S);
+
 
 //Save image to pass to another function
 handles.S = S;
@@ -59,17 +52,11 @@ handles = resume(handles);
 
     
 endfunction
-    
-    
-    
-
 
 function SaveButton_callback(handles)
 //Write your callback for  SaveButton  here
 fn = uiputfile('*');
-disp(fn);
 imwrite(handles.S, fn);
-
 endfunction
 
 
@@ -89,27 +76,60 @@ function Pbutton_bruiter_callback(handles)
 //Write your callback for  Pbutton_bruiter  here
 val = strtod(handles.edit.string);
 S = bruite(double(handles.S), val)/255;
+
 imshow(S);
 
 handles.S = S;
 handles = resume(handles);
-
-
 endfunction
+
+
 function Pbutton_bruite_imp_callback(handles)
 //Write your callback for  Pbutton_bruite_imp  here
+val = strtod(handles.edit.string);
+S = bruite_imp(double(handles.S), val);
 
+if(size(S,3) ~= 1) then
+    imshow(S);
+else
+    imshow(S/255);
+end
+
+handles.S = S;
+handles = resume(handles);
 endfunction
 
 
 function Pbutton_im_moyenne_callback(handles)
 //Write your callback for  Pbutton_im_moyenne  here
+f = strtod(handles.edit.string);
+S = im_moyenne(double(handles.S), f);
+
+if(size(S,3) ~= 1) then
+    imshow(S);
+else
+    imshow(S/255);
+end
+
+handles.S = S;
+handles = resume(handles);
 
 endfunction
 
 
 function Pbutton_im_median_callback(handles)
 //Write your callback for  Pbutton_im_median  here
+f = strtod(handles.edit.string);
+S = im_median(double(handles.S), f);
+
+if(size(S,3) ~= 1) then
+    imshow(S);
+else
+    imshow(S/255);
+end
+
+handles.S = S;
+handles = resume(handles);
 
 endfunction
 

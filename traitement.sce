@@ -40,7 +40,7 @@ endfunction
 
 function [M] = im_contour(img, cst)
     [sizeX, sizeY, sizeZ] = size(img);
-    M = zeros(sizeY, sizeX,sizeY);
+    M = zeros(sizeY, sizeX,sizeZ);
 
 for k = 1 :sizeZ
     for i = 1 :sizeY
@@ -194,5 +194,5 @@ endfunction
 //imshow(y);
 
 //k = extension_lineaire(img);
-k = seuillage(img, 100);
-imshow(k/255);
+//k = seuillage(img, 100);
+//imshow(k/255);
