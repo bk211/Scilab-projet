@@ -4,27 +4,27 @@ img = double(imread('img\lena.png'));
 
 test = [ 10, 20, 30; 40,50,60];
 
-function [v] = norme_gradient(img,i,j, sizeX, sizeY, cst)
+function [v] = norme_gradient(img,i,j, sizeX, sizeY, sizeZ,cst)
     if i < sizeX then
-        a = img(i+1, j);
+        a = img(i+1, j, sizeZ);
     else
         a = 0;
     end
     
     if i > 1 then
-        b = img(i-1, j);
+        b = img(i-1, j, sizeZ);
     else
         b = 0;
     end
 
     if j < sizeY then
-        c = img(i, j+1);
+        c = img(i, j+1, sizeZ);
     else
         c = 0;
     end
 
     if j > 1 then
-        d = img(i, j-1);
+        d = img(i, j-1, sizeZ);
     else
         d = 0;
     end
@@ -38,16 +38,18 @@ endfunction
 
 
 function [M] = im_contour(img, cst)
-    [sizeX, sizeY] = size(img);
+    [sizeX, sizeY, sizeZ] = size(img);
 
-    M = zeros(sizeY, sizeX);
+    M = zeros(sizeY, sizeX,sizeY);
 
-    for j = 1 :sizeY
-        for i = 1:sizeX
+for k = 1 :sizeZ
+    for i = 1 :sizeY
+        for j = 1:sizeX
             //disp(i,j);
-            M(j,i) = norme_gradient(img, j, i, sizeX, sizeY, cst);
+            M(i,j, k) = norme_gradient(img, i, j, sizeX, sizeY, sizeZ, cst);
         end
     end
+end
 
 
 
@@ -55,9 +57,10 @@ endfunction
 
 function [Ub] = bruite(U, s)
 // Description of bruite(U, s)
-    Ub = rand(size(U,1), size(U,2), 'normal');
+    Ub = rand(size(U,1), size(U,2),sizeZ(U,3), 'normal');
     Ub = Ub * s + U;
 endfunction
+
 
 function [Uimp] = bruite_imp(U, p)
 // Description of bruite(U, s)
@@ -66,7 +69,7 @@ I = rand(U);
 Uimp = 255*rand(U).*(I <p/100) + (I>=p/100).*U;
 endfunction
 
-function [A] = im_extract(U,i,j,f)
+function [A] = im_extract(U,i,j,f, dim)
 // Description of im_extract(U,i,j,f)
 [sizeY, sizeX] = size(img);
 
@@ -105,7 +108,7 @@ end
 //mprintf("%d %d %d %d", ydebutExtra, yfinExtra, xdebutExtra, xfinExtra);
 
 
-A = U(ydebut: yfin, xdebut: xfin);
+A = U(ydebut: yfin, xdebut: xfin, sizeZ, dim);
 
 endfunction
 
@@ -113,35 +116,57 @@ endfunction
 function [M] = im_moyenne(U,f)
 // Description of im_moyenne(U, f)
 nb = (2*f +1)^2;
-[sizeY, sizeX] = size(U);
+[sizeY, sizeX, sizeZ] = size(U);
 M = zeros(U);
+for k = 1:sizeZ
 for i = 1:sizeY
     for j = 1:sizeX
-        M(i,j) = sum(im_extract(U, i, j , f))/nb;
+        M(i,j, k) = sum(im_extract(U, i, j , f, k))/nb;
     end
+end
 end
 endfunction
 
 function [M] = im_median(U,f)
     // Description of im_median(U, f)
     nb = (2*f +1)^2;
-    [sizeY, sizeX] = size(U);
+    [sizeY, sizeX, sizeZ] = size(U);
     M = zeros(U);
+
+    for k = 1:sizeZ
     for i = 1:sizeY
         for j = 1:sizeX
-            M(i,j) = median(im_extract(U, i, j , f));
+            M(i,j,k) = median(im_extract(U, i, j , f, k));
         end
     end
-    endfunction
-    
+end
+endfunction
+
+function I = extension_lineaire(U)
+// Description of extension_lineaire(U)
+LUT = zeros(1,256, size(U,3));
+for k = 1 : size(U,3)
+for ng = 1:256
+    LUT(1,ng, k) = 255 * (ng - min(U)) / (max(U(:,:,k)) - min(U(:,:,k)));
+end
+end
+
+I = zeros(U);
+for k = 1: size(U,3);
+for i = 1: size(U,1)
+    for j = 1:size(U,2)
+        I(i,j,k) = LUT(1 ,U(i,j,k) - 1, k);
+    end
+end
+end
 
 
+endfunction
 
 //z=im_contour(img, 0.2);
 //imshow(z/255);
 
-y = bruite_imp(img, 10)/255;
+//y = bruite_imp(img, 30)/255;
 //imshow(y);
 
-res = im_moyenne(y,2);
-
+//k = extension_lineaire(img);
