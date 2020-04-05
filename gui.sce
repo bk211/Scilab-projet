@@ -16,6 +16,7 @@ handles.Pbutton_im_median=uicontrol(f,'unit','normalized','BackgroundColor',[-1,
 handles.Pbutton_extension_lineaire=uicontrol(f,'unit','normalized','BackgroundColor',[-1,-1,-1],'Enable','on','FontAngle','normal','FontName','Tahoma','FontSize',[12],'FontUnits','points','FontWeight','normal','ForegroundColor',[-1,-1,-1],'HorizontalAlignment','center','ListboxTop',[],'Max',[1],'Min',[0],'Position',[0.6340541,0.3087373,0.1760256,0.0622727],'Relief','default','SliderStep',[0.01,0.1],'String','extension lineaire','Style','pushbutton','Value',[0],'VerticalAlignment','middle','Visible','on','Tag','Pbutton_extension_lineaire','Callback','Pbutton_extension_lineaire_callback(handles)')
 handles.Pbutton_seuillage=uicontrol(f,'unit','normalized','BackgroundColor',[-1,-1,-1],'Enable','on','FontAngle','normal','FontName','Tahoma','FontSize',[12],'FontUnits','points','FontWeight','normal','ForegroundColor',[-1,-1,-1],'HorizontalAlignment','center','ListboxTop',[],'Max',[1],'Min',[0],'Position',[0.6340541,0.2363636,0.1060256,0.0622727],'Relief','default','SliderStep',[0.01,0.1],'String','seuillage','Style','pushbutton','Value',[0],'VerticalAlignment','middle','Visible','on','Tag','Pbutton_seuillage','Callback','Pbutton_seuillage_callback(handles)')
 handles.Pbutton_changement_echelle=uicontrol(f,'unit','normalized','BackgroundColor',[-1,-1,-1],'Enable','on','FontAngle','normal','FontName','Tahoma','FontSize',[12],'FontUnits','points','FontWeight','normal','ForegroundColor',[-1,-1,-1],'HorizontalAlignment','center','ListboxTop',[],'Max',[1],'Min',[0],'Position',[0.7898179,0.894797,0.2024934,0.0463636],'Relief','default','SliderStep',[0.01,0.1],'String','changement echelle ','Style','pushbutton','Value',[0],'VerticalAlignment','middle','Visible','on','Tag','Pbutton_changement_echelle','Callback','Pbutton_changement_echelle_callback(handles)')
+handles.Pbutton_histogramme=uicontrol(f,'unit','normalized','BackgroundColor',[-1,-1,-1],'Enable','on','FontAngle','normal','FontName','Tahoma','FontSize',[12],'FontUnits','points','FontWeight','normal','ForegroundColor',[-1,-1,-1],'HorizontalAlignment','center','ListboxTop',[],'Max',[1],'Min',[0],'Position',[0.7945946,0.8204545,0.1837838,0.0454545],'Relief','default','SliderStep',[0.01,0.1],'String','histogramme','Style','pushbutton','Value',[0],'VerticalAlignment','middle','Visible','on','Tag','Pbutton_histogramme','Callback','Pbutton_histogramme_callback(handles)')
 
 
 f.visible = "on";
@@ -25,6 +26,8 @@ f.visible = "on";
 // Callbacks are defined as below. Please do not delete the comments as it will be used in coming version
 //////////
 
+
+exec("traitement.sce");
 
 
 
@@ -142,7 +145,24 @@ endfunction
 
 function Pbutton_changement_echelle_callback(handles)
 //Write your callback for  Pbutton_changement_echelle  here
+seuil = strtod(handles.edit.string);
+S = changement_echelle(double(handles.S), seuil, seuil);
+imshow(S);
+handles.S = S;
+handles = resume(handles);
+endfunction
 
+
+function Pbutton_histogramme_callback(handles)
+//Write your callback for  Pbutton_histogramme  here
+P = histogramme(double(handles.S));
+if(size(P,3)) == 3 then
+    plot(P(:,:,1),'ro-');
+    plot(P(:,:,2),'cya+');
+    plot(P(:,:,3),'--mo');
+else
+    plot(P);
+end
 endfunction
 
 

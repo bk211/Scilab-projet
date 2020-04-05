@@ -200,6 +200,19 @@ end
 
 endfunction
 
+function R = histogramme(U)
+// Description of histogramme
+R = zeros(1,256, size(U,3));
+
+for k = 1: size(U,3)
+    for i = 1: size(U,1)
+        for j = 1: size(U,2)
+            R(1, U(i,j,k), k) = R(1, U(i,j,k), k) + 1; 
+        end
+    end
+end
+
+endfunction
 
 
 
