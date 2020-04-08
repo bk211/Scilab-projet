@@ -146,7 +146,7 @@ endfunction
 function Pbutton_changement_echelle_callback(handles)
 //Write your callback for  Pbutton_changement_echelle  here
 seuil = strtod(handles.edit.string);
-S = changement_echelle(double(handles.S), seuil, seuil);
+S = changement_echelle(double(handles.S), seuil, seuil)/255;
 imshow(S);
 handles.S = S;
 handles = resume(handles);
@@ -165,5 +165,4 @@ else
     plot(P);
 end
 endfunction
-
 
